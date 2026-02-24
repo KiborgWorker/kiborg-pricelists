@@ -1,0 +1,26 @@
+{
+  "name": "kiborg-pricelists",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "workspaces": [
+    "server",
+    "client/core",
+    "client/apps/*"
+  ],
+  "homepage": "https://github.com/Kiborg-Dev-Org/kiborg-pricelists#readme",
+  "bugs": {
+    "url": "https://github.com/Kiborg-Dev-Org/kiborg-pricelists/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kiborg-Dev-Org/kiborg-pricelists.git"
+  },
+  "license": "ISC",
+  "author": "Roman Martseniuk",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
