@@ -1,0 +1,116 @@
+import cors from 'cors';
+import express from 'express';
+
+import type { Request, Response } from "express";
+import { initDB } from './database/db';
+import { updateLists } from "./utils/updateLists";
+import { getViewCategories } from "./utils/getViewCategories";
+import { ProductRepository } from "./database/ProductsRepository ";
+import { Product } from "./types/Product";
+
+initDB();
+// add updateLists();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// const allowedOrigins = [
+//   "https://kiborg-pricelist-all-products.vercel.app",
+//   "https://kiborg-pricelist-kiborg-products.vercel.app",
+//   "https://kiborg-pricelist-militex-products.vercel.app",
+
+//   // Local IP
+//   "http://localhost:5173"
+// ]
+
+const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS
+  ? process.env.CORS_ALLOWED_ORIGINS.split(",").map(o => o.trim())
+  : [];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // для Postman / SSR
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,               // якщо потрібні куки
+}));
+
+app.get("/update", async (req: Request, res: Response) => {
+  res.send(updateLists());
+});
+
+app.get("/status", (req: Request, res: Response) => {
+  res.send('Server is running...')
+});
+
+app.get("/get/categories", async (req: Request, res: Response) => {
+  const { vendorFilter } = req.query;
+  try {
+    const data = await getViewCategories();
+
+    const resData = await Promise.all(
+      data.map(async ({ productCategoriesList, ...rest }) => {
+        let products: Product[] = [];
+
+        productCategoriesList.forEach(el => {
+          const data = ProductRepository.getByCategory(el);
+          products = [...products, ...data];
+        });
+        if (vendorFilter) products = products.filter(p => p.vendor === vendorFilter)
+
+        return {
+          ...rest,
+          isEmpty: products.length === 0,
+        };
+      })
+    );
+
+    res.json(resData);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.get("/get/products", async (req: Request, res: Response) => {
+  const { productId, categoryId, vendorFilter } = req.query;
+
+  if (productId) {
+    const data = ProductRepository.getById(productId as string);
+    return res.send(data); // return гарантує, що код далі не виконається
+  }
+
+  if (categoryId) {
+    const categories = await getViewCategories();
+    const category = categories.find(cat => cat.id === +categoryId);
+
+    if (!category) return res.status(400).send("Category not found");
+
+    let list: Product[] = [];
+
+    category.productCategoriesList.forEach(el => {
+      const data = ProductRepository.getByCategory(el);
+      list = [...list, ...data];
+    });
+
+    if (!vendorFilter) return res.send(list.map(item => ({ ...item, urlMilitex: undefined })).reverse());
+
+    let filteredList = list.filter(item => item.vendor === vendorFilter);
+    if (vendorFilter === 'Militex') {
+      filteredList = filteredList.map(item => ({ ...item, url: item.urlMilitex, urlMilitex: undefined }))
+    } else {
+      filteredList = filteredList.map(item => ({ ...item, urlMilitex: undefined }))
+    }
+    return res.send(filteredList.reverse());
+  }
+
+  return res.status(400).send("productId or categoryId is required");
+});
+
+app.listen(3000, "0.0.0.0", () => {
+  console.log("Server running on 0.0.0.0:3000");
+});

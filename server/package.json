@@ -1,0 +1,35 @@
+{
+  "name": "server",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Roman Martseniuk",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.6.2",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "fast-xml-parser": "^5.3.4",
+    "fs": "^0.0.1-security",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.10",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": "25.x"
+  }
+}

@@ -1,0 +1,5 @@
+packages:
+  - "server"
+  - "client/price-all"
+  - "client/price-kiborg"
+  - "client/price-militex"

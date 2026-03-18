@@ -1,26 +1,37 @@
 {
   "name": "kiborg-pricelists",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
-  "workspaces": [
-    "server",
-    "client/core",
-    "client/apps/*"
-  ],
-  "homepage": "https://github.com/Kiborg-Dev-Org/kiborg-pricelists#readme",
-  "bugs": {
-    "url": "https://github.com/Kiborg-Dev-Org/kiborg-pricelists/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Kiborg-Dev-Org/kiborg-pricelists.git"
-  },
-  "license": "ISC",
-  "author": "Roman Martseniuk",
-  "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
+    "server:install": "pnpm install --filter \"server\"",
+    "server:dev": "pnpm --filter server run dev",
+    "server:build": "pnpm --filter server run build",
+    "server:start": "pnpm --filter server run start",
+
+    "client-price-all:install": "pnpm install --filter \"./client/price-all\"",
+    "client-kiborg:install": "pnpm install --filter \"./client/price-kiborg\"",
+    "client-militex:install": "pnpm install --filter \"./client/price-militex\"",
+
+    "client-price-all:dev": "pnpm --filter price-all run dev",
+    "client-kiborg:dev": "pnpm --filter price-kiborg run dev",
+    "client-militex:dev": "pnpm --filter price-militex run dev",
+
+    "client-price-all:build": "pnpm --filter price-all run build",
+    "client-kiborg:build": "pnpm --filter price-kiborg run build",
+    "client-militex:build": "pnpm --filter price-militex run build",
+
+    "client-price-all:lint": "pnpm --filter price-all run lint",
+    "client-kiborg:lint": "pnpm --filter price-kiborg run lint",
+    "client-militex:lint": "pnpm --filter price-militex run lint",
+
+    "client-price-all:preview": "pnpm --filter price-all run preview",
+    "client-kiborg:preview": "pnpm --filter price-kiborg run preview",
+    "client-militex:preview": "pnpm --filter price-militex run preview"
+  },
+  "keywords": [],
+  "author": "Roman Martseniuk",
+  "license": "ISC",
+  "packageManager": "pnpm@10.30.3"
 }
